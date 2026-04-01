@@ -10,6 +10,9 @@ const basePath = process.env.BASE_PATH ?? "/";
 
 export default defineConfig({
   base: basePath,
+  css: {
+    devSourcemap: false,
+  },
   plugins: [
     react(),
     tailwindcss(),
@@ -37,6 +40,7 @@ export default defineConfig({
   },
   root: path.resolve(import.meta.dirname),
   build: {
+    sourcemap: false,
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
   },
