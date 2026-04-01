@@ -8,12 +8,28 @@ const rawPort = process.env.PORT;
 const port = rawPort ? Number(rawPort) : 5173;
 const basePath = process.env.BASE_PATH ?? "/";
 
+// Plugin to remove "use client" directive that causes sourcemap errors
+function removeUseClientDirective() {
+  return {
+    name: "remove-use-client-directive",
+    transform(code: string, id: string) {
+      if (id.includes("node_modules")) return null;
+      if (!code.includes('"use client"') && !code.includes("'use client'")) return null;
+      return {
+        code: code.replace(/["']use client["']\s*\n?/g, ""),
+        map: null,
+      };
+    },
+  };
+}
+
 export default defineConfig({
   base: basePath,
   css: {
     devSourcemap: false,
   },
   plugins: [
+    removeUseClientDirective(),
     react(),
     tailwindcss(),
     runtimeErrorOverlay(),
